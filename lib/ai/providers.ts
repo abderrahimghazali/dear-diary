@@ -1,10 +1,14 @@
-import { gateway } from "@ai-sdk/gateway";
+import { createOllama } from "ollama-ai-provider-v2";
 import {
   customProvider,
   extractReasoningMiddleware,
   wrapLanguageModel,
 } from "ai";
 import { isTestEnvironment } from "../constants";
+
+const ollama = createOllama({
+  baseURL: process.env.OLLAMA_BASE_URL || 'http://localhost:11434/api',
+});
 
 export const myProvider = isTestEnvironment
   ? (() => {
@@ -16,8 +20,8 @@ export const myProvider = isTestEnvironment
       } = require("./models.mock");
       return customProvider({
         languageModels: {
-          "chat-model": chatModel,
-          "chat-model-reasoning": reasoningModel,
+          "diary-chat": chatModel,
+          "diary-reasoning": reasoningModel,
           "title-model": titleModel,
           "artifact-model": artifactModel,
         },
@@ -25,12 +29,12 @@ export const myProvider = isTestEnvironment
     })()
   : customProvider({
       languageModels: {
-        "chat-model": gateway.languageModel("xai/grok-2-vision-1212"),
-        "chat-model-reasoning": wrapLanguageModel({
-          model: gateway.languageModel("xai/grok-3-mini"),
+        "diary-chat": ollama("mistral:7b"),
+        "diary-reasoning": wrapLanguageModel({
+          model: ollama("mistral:7b"),
           middleware: extractReasoningMiddleware({ tagName: "think" }),
         }),
-        "title-model": gateway.languageModel("xai/grok-2-1212"),
-        "artifact-model": gateway.languageModel("xai/grok-2-1212"),
+        "title-model": ollama("mistral:7b"),
+        "artifact-model": ollama("mistral:7b"),
       },
     });

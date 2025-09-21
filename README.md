@@ -1,70 +1,100 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
-</a>
+<h1 align="center">Dear Diary</h1>
 
 <p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
+    A private, empathetic AI diary companion powered by local Ollama models. Your personal space for thoughts, reflections, and conversations with an AI that truly listens.
 </p>
 
 <p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
+  <a href="#setup"><strong>Setup</strong></a> ·
   <a href="#running-locally"><strong>Running locally</strong></a>
 </p>
 <br/>
 
 ## Features
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://ai-sdk.dev/docs/introduction)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports xAI (default), OpenAI, Fireworks, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+- **🔒 Complete Privacy**: All conversations stay on your local machine
+- **🤖 Local AI**: Powered by Ollama with Mistral 7B - no cloud dependencies
+- **💝 Empathetic Companion**: AI trained to be a warm, understanding diary companion
+- **📖 Conversation History**: Persistent storage of your diary entries and conversations
+- **🎨 Beautiful Interface**: Built with Next.js, Tailwind CSS, and shadcn/ui
+- **🔐 Secure**: Local PostgreSQL database with authentication
+- **⚡ Real-time**: Streaming responses for natural conversation flow
 
-## Model Providers
+## Setup
 
-This template uses the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) to access multiple AI models through a unified interface. The default configuration includes [xAI](https://x.ai) models (`grok-2-vision-1212`, `grok-3-mini`) routed through the gateway.
+Dear Diary uses local AI models through Ollama for complete privacy. No data ever leaves your machine.
 
-### AI Gateway Authentication
+### Prerequisites
 
-**For Vercel deployments**: Authentication is handled automatically via OIDC tokens.
+1. **Docker** - For running PostgreSQL
+2. **Ollama** - For local AI models
 
-**For non-Vercel deployments**: You need to provide an AI Gateway API key by setting the `AI_GATEWAY_API_KEY` environment variable in your `.env.local` file.
+### Install Ollama and Models
 
-With the [AI SDK](https://ai-sdk.dev/docs/introduction), you can also switch to direct LLM providers like [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://ai-sdk.dev/providers/ai-sdk-providers) with just a few lines of code.
+```bash
+# Install Ollama (macOS)
+curl -fsSL https://ollama.ai/install.sh | sh
 
-## Deploy Your Own
-
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/templates/next.js/nextjs-ai-chatbot)
+# Pull required models
+ollama pull mistral:7b
+ollama pull nomic-embed-text  # For future vector search features
+```
 
 ## Running locally
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
-
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+### 1. Start PostgreSQL Database
 
 ```bash
+docker run -d \
+  --name dear-diary-postgres \
+  -p 5433:5432 \
+  -e POSTGRES_DB=dear_diary \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  postgres:15
+```
+
+### 2. Clone and Setup
+
+```bash
+git clone <your-repo-url>
+cd dear-diary
 pnpm install
+```
+
+### 3. Environment Configuration
+
+Copy `.env.example` to `.env` and update:
+
+```bash
+cp .env.example .env
+```
+
+The `.env` should contain:
+```env
+POSTGRES_URL=postgresql://postgres:password@localhost:5433/dear_diary
+OLLAMA_BASE_URL=http://localhost:11434/api
+AUTH_SECRET=your_random_secret_here
+```
+
+### 4. Run Database Migrations
+
+```bash
+pnpm db:migrate
+```
+
+### 5. Start the Application
+
+```bash
 pnpm dev
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+Your personal diary companion will be running on [localhost:3000](http://localhost:3000)! 🎉
+
+## Privacy & Security
+
+- ✅ All AI processing happens locally via Ollama
+- ✅ All data stored locally in PostgreSQL
+- ✅ No external API calls for AI inference
+- ✅ Complete control over your personal data
