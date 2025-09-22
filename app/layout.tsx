@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Dear Diary - Your Private AI Companion",
   description:
     "A private, empathetic AI diary companion powered by local Ollama models. Your personal space for thoughts, reflections, and conversations.",
+  icons: {
+    icon: "/diary.png",
+  },
 };
 
 export const viewport = {

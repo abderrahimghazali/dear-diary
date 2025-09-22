@@ -87,6 +87,7 @@ pnpm db:migrate
 ### 5. Start the Application
 
 ```bash
+pnpm install
 pnpm dev
 ```
 
