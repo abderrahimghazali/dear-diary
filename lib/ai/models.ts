@@ -10,7 +10,8 @@ export const chatModels: ChatModel[] = [
   {
     id: "diary-chat",
     name: "Diary Companion",
-    description: "Empathetic AI companion for personal journaling and reflection",
+    description:
+      "Empathetic AI companion for personal journaling and reflection",
   },
   {
     id: "diary-reasoning",

@@ -1,13 +1,13 @@
-import { createOllama } from "ollama-ai-provider-v2";
 import {
   customProvider,
   extractReasoningMiddleware,
   wrapLanguageModel,
 } from "ai";
+import { createOllama } from "ollama-ai-provider-v2";
 import { isTestEnvironment } from "../constants";
 
 const ollama = createOllama({
-  baseURL: process.env.OLLAMA_BASE_URL || 'http://localhost:11434/api',
+  baseURL: process.env.OLLAMA_BASE_URL || "http://localhost:11434/api",
 });
 
 export const myProvider = isTestEnvironment
